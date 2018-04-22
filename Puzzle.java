@@ -1,83 +1,93 @@
-package cs420;
-import java.util.Arrays;
 import java.util.ArrayList;
-import java.util.Collections;
-//import java.util.PriorityQueue;
-import java.util.Scanner;
+import java.util.HashSet;
+import java.util.Iterator;
 
 public class Puzzle {
 
-	public static void main(String[] args) {
-		
-		Scanner keyboard = new Scanner(System.in);
-		// for taking input of entered string and checking if contents are valid
-		/*int[] test = {2,4,1,7,3};
-		Arrays.sort(test);
-		for (int i = 0; i < test.length; i++)
-			System.out.println(test[i]);*/
-		
-		int[] test = {0,1,2,3,4,5,9,7,8};
-		/*if (isValid(test))
-			System.out.println("Success");
-		else
-			System.out.println("Failure");*/
-		/*for (int i = 0; i < test.length; i++)
-			System.out.println(test[i]);*/
-		
-		keyboard.close();
-		//puzzleCreation(2);
-		
-		// test
-
-	}
+	HashSet<State> visited = new HashSet<State>();
+	HashSet<State> unvisited = new HashSet<State>();
 	
-	// if user's input is not good, need to have condition to check contents (i.e., sum is 0
-	public static int[] puzzleCreation(int input) {
+	public void aStar(State obj, int heuristic) {
 		
-		Scanner keyboard = new Scanner(System.in);
-		ArrayList<Integer> aList = new ArrayList<Integer>();
-		int[] temp = new int[9];
-		int[] placeholder = {0,1,2,3,4,5,6,7,8};
-		switch (input) {
-			case 1: // user input
-				for (int i = 0; i < temp.length; i++) {
-					System.out.println("Enter value for tile " + i);
-					temp[i] = keyboard.nextInt();
-				}
+		boolean solved = false;
+		boolean solvable = true;
 				
-				/*for (int j = 0; j < temp.length; j++)
-					aList.add(temp[j]);*/
+		switch (heuristic) { // Calculates heuristic and 'f' values for first iteration
+			case 1: 
+				obj.calcH1();
+				obj.calcF(1);
+
 				break;
-			case 2: // random
-				for (int i = 0; i < placeholder.length; i++)
-					aList.add(placeholder[i]);
-				Collections.shuffle(aList);
-				for (int j = 0; j < temp.length; j++)
-					temp[j] = aList.get(j);
-				/*//test
-				for (int j = 0; j < list.size(); j++)
-					System.out.println(list.get(j));*/
-				break;
-			default:
-				System.out.println("Incorrect choice used, please try again.");
+			case 2: 
+				obj.calcH2();
+				obj.calcF(2);
+
 				break;
 		}
 		
-		keyboard.close();
-		return temp;
+		do {	
+			if (checkState(obj)) {
+				solved = true;
+			}
+			else {
+				// iterator's for visited and unvisited states
+				Iterator<State> i = visited.iterator();
+				Iterator<State> i2 = unvisited.iterator();
+				State temp = obj;
+				State temp2;
+				
+				// checks visited states, if any
+				if (!visited.isEmpty()) {
+					while (i.hasNext()) { 
+						temp2 = i.next();
+						if (temp2.getF() < obj.getF()) 
+							obj = temp2;
+					}
+					visited.remove(obj); 
+					visited.add(temp);
+				}
+
+				// checks unvisited states, if any
+				if (!unvisited.isEmpty()) {
+					temp2 = i2.next();
+					while (i2.hasNext()) {
+						if (temp2.getF() < obj.getF())
+							obj = temp2;
+					}
+					unvisited.remove(obj);
+				}
+
+				State bestChild = obj.findBestChild(heuristic); // locates best Child towards goal state
+				ArrayList<State> al = obj.getLesserChildren();
+				
+				for (int k = 0; k < al.size(); k++) // adds all other children to unvisited set
+					unvisited.add(al.get(k));
+				
+				if (bestChild.getF() < obj.getF()) // locates most optimal state
+					obj = bestChild;
+			}
+			if (obj.getG() > 31) {
+				System.out.println("This puzzle is unsolvable.");
+				solvable = false;
+			}
+			
+		} while(solved == false && solvable == true);
+		
+		obj.printPuzzle();
+		
 	}
 	
-	public static boolean isValid(int[] arr) {
+	// checks for final goal state, [0,1,2,3,4,5,6,7,8]
+	public boolean checkState(State obj) {
 		
-		int[] test = new int[9];
-		for (int i = 0; i < arr.length; i++) {
-			test[i] = arr[i];
-		}
-		Arrays.sort(test);
-		for (int i = 0; i < test.length; i++) {
-			if (test[i] != i)
+		int[] temp = new int[9];
+		temp = obj.getTiles();
+		for (int i = 0; i < temp.length; i++) {
+			if (i != temp[i]) 
 				return false;
 		}
+		
 		return true;
 	}
+	
 }
