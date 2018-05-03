@@ -1,4 +1,4 @@
-package n.queens;
+package n_queens;
 
 public class Main {
 

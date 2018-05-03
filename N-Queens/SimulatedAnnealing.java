@@ -1,4 +1,4 @@
-package n.queens;
+package n_queens;
 import java.util.ArrayList;
 import java.util.Random;
 
