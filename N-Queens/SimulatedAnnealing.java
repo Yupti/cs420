@@ -37,7 +37,7 @@ public class SimulatedAnnealing {
 		}
 		
 		if (testCost == 0) {
-			//printBoard(temp);
+			printBoard(temp);
 			System.out.println("Board is solved.");
 			return true;
 		}
@@ -82,9 +82,9 @@ public class SimulatedAnnealing {
 		for (int i = 0; i < b.length; i++) {
 			for (int j = 0; j < b.length; j++) {
 				if (j == b[i])
-					System.out.print("1 ");
+					System.out.print("Q ");
 				else
-					System.out.print("0 ");
+					System.out.print(". ");
 			}
 			System.out.println("");
 		}
