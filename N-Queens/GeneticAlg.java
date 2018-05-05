@@ -1,5 +1,3 @@
-package n_queens;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -35,9 +33,9 @@ public class GeneticAlg {
             fit = pop.get(popSize - 1).getFitness();
              
             if (fit == (int) (idealFit * ((idealFit - 1) / 2.0))) {
-            	System.out.println("Done");
             	pop.get(popSize - 1).printBoard();
-            	System.out.println(genCount +" generations made.");
+            	System.out.println(genCount + " generations made.");
+            	System.out.println("");
                 return true;
             }
              
@@ -59,7 +57,7 @@ public class GeneticAlg {
             genCount++;
         }
     }
-     
+
     public void fitLevels() {
         curFitness = 0;
         Collections.sort(pop);
@@ -70,7 +68,7 @@ public class GeneticAlg {
         }
          
     }
-     
+
     public int[] bestParent() {
         int count = 0;
         int decrement;
@@ -90,7 +88,8 @@ public class GeneticAlg {
          
         return parent;
     }
-     
+
+    // cross-breeds a new child from parents at a random point in board
     public int[] crossBreed(int[] b1, int[] b2) {
         int crossPoint = rand.nextInt(b1.length);
         int[] child = new int[b1.length];
@@ -105,7 +104,8 @@ public class GeneticAlg {
         return child;
          
     }
-     
+
+    // creates next generation
     public void nextGen(ArrayList<Board> succ, int[] parent1, int[] parent2) {
         int index;
         int[] child;
@@ -124,8 +124,9 @@ public class GeneticAlg {
             succ.add(new Board(child));
         }
     }
-     
-    public void mutate (ArrayList<Board> succ) {
+    
+    // causes mutations for successor boards w/ lower fitness scores
+    public void mutate(ArrayList<Board> succ) {
          
         for (int i = 0; i < succ.size() / 4; i++)
             succ.get(i).moveQueenRandomly();
