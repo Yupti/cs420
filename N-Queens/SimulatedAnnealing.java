@@ -1,26 +1,30 @@
-package n_queens;
 import java.util.ArrayList;
 import java.util.Random;
 
 
 public class SimulatedAnnealing {
 
-	private int[] board = new int[21];
+	private int[] board;
 	
-	public SimulatedAnnealing() {
+	public SimulatedAnnealing(int size) {
 		
 		ArrayList<Integer> al = new ArrayList<Integer>();
 		Random r = new Random();
+		board = new int[size];
 		int randIndex, randCol;
 		
-		for (int i = 0; i < 21; i++) 
+		for (int i = 0; i < size; i++) 
 			al.add(i);
 		
-		for (int i = 0; i < 21; i++) { // generating board with randomized queen set up
+		for (int i = 0; i < size; i++) { 
 			randIndex = r.nextInt(al.size());
 			randCol = al.remove(randIndex);
 			board[i] = randCol;
 		}
+		
+		System.out.println("Initial board: ");
+		printBoard(board);
+		System.out.println("");
 	}
 	
 	public boolean solveBoard() {
@@ -37,8 +41,8 @@ public class SimulatedAnnealing {
 		}
 		
 		if (testCost == 0) {
-			//printBoard(temp);
-			System.out.println("Board is solved.");
+			System.out.println("Final board solved:");
+			printBoard(temp);
 			return true;
 		}
 		else {
@@ -48,7 +52,6 @@ public class SimulatedAnnealing {
 		
 	}
 	
-	// this needs testing
 	public int[] getNextMove(int[] temp, int target, double temperature) {
 		
 		int len = temp.length;
@@ -75,16 +78,12 @@ public class SimulatedAnnealing {
 	
 	public void printBoard(int[] b) {
 		
-		for (int i = 0; i < b.length; i++) 
-			System.out.print(b[i] + " ");
-		System.out.println("\n");
-		
 		for (int i = 0; i < b.length; i++) {
 			for (int j = 0; j < b.length; j++) {
 				if (j == b[i])
-					System.out.print("1 ");
+					System.out.print("Q ");
 				else
-					System.out.print("0 ");
+					System.out.print(". ");
 			}
 			System.out.println("");
 		}
